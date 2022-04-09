@@ -23,8 +23,8 @@ public class WarpsFile extends ExFile {
     }
 
     public void addWarp(String name, Location location, String... aliases) {
-        super.setLocation(WARPS + "." + name, location, true);
-        super.set(WARPS + "." + name + "." + ALIASES, aliases);
+        super.setLocation(WARPS + "." + name, location, true).save();
+        super.set(WARPS + "." + name + "." + ALIASES, aliases).save();
     }
 
     public void removeWarp(String name) {
