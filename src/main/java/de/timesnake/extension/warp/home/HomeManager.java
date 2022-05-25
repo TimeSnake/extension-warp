@@ -40,7 +40,8 @@ public class HomeManager {
             }
 
             this.homes.put(key, home);
-            Server.printText(Plugin.HOME, "Loaded home " + home.getUuid() + " world: " + home.getLocation().getWorld().getName());
+            Server.printText(Plugin.HOME,
+                    "Loaded home " + home.getUuid() + " world: " + home.getLocation().getWorld().getName());
         }
         Server.printText(Plugin.HOME, "Loaded homes from file");
     }

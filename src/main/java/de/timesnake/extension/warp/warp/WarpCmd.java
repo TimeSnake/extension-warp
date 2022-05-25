@@ -34,7 +34,8 @@ public class WarpCmd implements CommandListener {
 
         String warpName = args.get(0).toLowerCase();
         if (!wm.containsWarp(warpName)) {
-            if (args.isLengthHigherEquals(2, false) && args.get(1).equals("create") && sender.hasPermission("exwarp.warp.create", 2650)) {
+            if (args.isLengthHigherEquals(2, false) && args.get(1).equals("create") && sender.hasPermission("exwarp" +
+                    ".warp.create", 2650)) {
                 List<String> aliases = args.toStringList(2, args.getLength() - 1);
                 wm.addWarp(new Warp(warpName, user.getLocation(), aliases));
                 if (aliases == null || aliases.size() == 0) {

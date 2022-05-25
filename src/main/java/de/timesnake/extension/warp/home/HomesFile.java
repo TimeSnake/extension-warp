@@ -24,7 +24,8 @@ public class HomesFile extends ExFile {
     }
 
     public void addHome(Home home) {
-        super.setLocation(HOMES + "." + home.getUuid().toString() + "." + home.getLocation().getWorld().getName(), home.getLocation(), true);
+        super.setLocation(HOMES + "." + home.getUuid().toString() + "." + home.getLocation().getWorld().getName(),
+                home.getLocation(), true);
     }
 
     public void removeHome(Home home) {
@@ -38,7 +39,8 @@ public class HomesFile extends ExFile {
             try {
                 location = super.getLocation(path);
             } catch (WorldNotExistException e) {
-                Server.printWarning(Plugin.HOME, "Can not get location (world not exist) from uuid: " + uuid.toString() + " world: " + worldName);
+                Server.printWarning(Plugin.HOME,
+                        "Can not get location (world not exist) from uuid: " + uuid.toString() + " world: " + worldName);
                 return null;
             }
             if (location != null) {
