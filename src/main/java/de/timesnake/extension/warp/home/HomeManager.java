@@ -60,6 +60,7 @@ public class HomeManager {
         for (Home home : this.homes.values()) {
             this.file.addHome(home);
         }
+        this.file.save();
         Server.printText(Plugin.HOME, "Saved homes to file");
     }
 
