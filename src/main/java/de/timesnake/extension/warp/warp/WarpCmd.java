@@ -50,7 +50,7 @@ public class WarpCmd implements CommandListener {
                 }
             } else {
                 sender.sendMessageNotExist(warpName, 2750, "Warp");
-                sender.sendMessageCommandHelp("Create warp", "warp <name> create [{aliases}]");
+                sender.sendMessageCommandHelp(Component.text("Create warp"), Component.text("warp <name> create [{aliases}]"));
             }
         } else {
             Warp warp = wm.getWarp(warpName);
@@ -99,14 +99,14 @@ public class WarpCmd implements CommandListener {
 
                     }
                 } else {
-                    sender.sendMessageCommandHelp("Add alias", "warp <name> add alias <alias>");
-                    sender.sendMessageCommandHelp("Remove alias", "warp <name> remove alias <alias>");
+                    sender.sendMessageCommandHelp(Component.text("Add alias"), Component.text("warp <name> add alias <alias>"));
+                    sender.sendMessageCommandHelp(Component.text("Remove alias"), Component.text("warp <name> remove alias <alias>"));
                 }
             } else {
-                sender.sendMessageCommandHelp("Use the warp", "warp <name/alias>");
-                sender.sendMessageCommandHelp("Create warp", "warp <name> create [{aliases}]");
-                sender.sendMessageCommandHelp("Add alias", "warp <name> add alias <alias>");
-                sender.sendMessageCommandHelp("Remove alias", "warp <name> remove alias <alias>");
+                sender.sendMessageCommandHelp(Component.text("Use the warp"), Component.text("warp <name/alias>"));
+                sender.sendMessageCommandHelp(Component.text("Create warp"), Component.text("warp <name> create [{aliases}]"));
+                sender.sendMessageCommandHelp(Component.text("Add alias"), Component.text("warp <name> add alias <alias>"));
+                sender.sendMessageCommandHelp(Component.text("Remove alias"), Component.text("warp <name> remove alias <alias>"));
 
             }
         }
