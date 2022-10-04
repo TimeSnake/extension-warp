@@ -7,6 +7,8 @@ import de.timesnake.basic.bukkit.util.user.User;
 import de.timesnake.extension.warp.server.ExWarpServer;
 import de.timesnake.library.basic.util.chat.ExTextColor;
 import de.timesnake.library.extension.util.chat.Chat;
+import de.timesnake.library.extension.util.chat.Code;
+import de.timesnake.library.extension.util.chat.Plugin;
 import de.timesnake.library.extension.util.cmd.Arguments;
 import de.timesnake.library.extension.util.cmd.ExCommand;
 import net.kyori.adventure.text.Component;
@@ -15,6 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WarpCmd implements CommandListener {
+
+    private Code.Permission createPerm;
+    private Code.Permission usePerm;
+    private Code.Permission removePerm;
+    private Code.Permission addPerm;
+    private Code.Help warpNotExists;
+
 
     @Override
     public void onCommand(Sender sender, ExCommand<Sender, Argument> cmd, Arguments<Argument> args) {
@@ -35,8 +44,8 @@ public class WarpCmd implements CommandListener {
 
         String warpName = args.get(0).toLowerCase();
         if (!wm.containsWarp(warpName)) {
-            if (args.isLengthHigherEquals(2, false) && args.get(1).equals("create") && sender.hasPermission("exwarp" +
-                    ".warp.create", 2650)) {
+            if (args.isLengthHigherEquals(2, false) && args.get(1).equals("create")
+                    && sender.hasPermission(this.createPerm)) {
                 List<String> aliases = args.toStringList(2, args.getLength() - 1);
                 wm.addWarp(new Warp(warpName, user.getLocation(), aliases));
                 if (aliases == null || aliases.size() == 0) {
@@ -49,14 +58,14 @@ public class WarpCmd implements CommandListener {
                             .append(Chat.listToComponent(aliases, ExTextColor.VALUE, ExTextColor.PERSONAL)));
                 }
             } else {
-                sender.sendMessageNotExist(warpName, 2750, "Warp");
+                sender.sendMessageNotExist(warpName, this.warpNotExists, "Warp");
                 sender.sendMessageCommandHelp(Component.text("Create warp"), Component.text("warp <name> create [{aliases}]"));
             }
         } else {
             Warp warp = wm.getWarp(warpName);
 
             if (args.isLengthEquals(1, false)) {
-                if (!sender.hasPermission("exwarp.warp.use", 2651)) {
+                if (!sender.hasPermission(this.usePerm)) {
                     return;
                 }
                 user.teleport(warp.getLocation());
@@ -66,7 +75,7 @@ public class WarpCmd implements CommandListener {
                 if (args.get(2).toLowerCase().equals("alias") || args.isLengthEquals(4, true)) {
                     String alias = args.getString(3).toLowerCase();
                     if (args.get(1).toLowerCase().equals("add")) {
-                        if (!sender.hasPermission("exwarp.warp.add", 2652)) {
+                        if (!sender.hasPermission(this.addPerm)) {
                             return;
                         }
                         if (wm.containsWarp(alias)) {
@@ -82,7 +91,7 @@ public class WarpCmd implements CommandListener {
                                 .append(Component.text(warpName, ExTextColor.VALUE)));
 
                     } else if (args.get(1).toLowerCase().equals("remove")) {
-                        if (!sender.hasPermission("exwarp.warp.remove", 2653)) {
+                        if (!sender.hasPermission(this.removePerm)) {
                             return;
                         }
                         if (!warp.getAliases().contains(alias)) {
@@ -123,5 +132,14 @@ public class WarpCmd implements CommandListener {
             return warps;
         }
         return null;
+    }
+
+    @Override
+    public void loadCodes(Plugin plugin) {
+        this.createPerm = plugin.createPermssionCode("wrp", "exwarp.warp.create");
+        this.usePerm = plugin.createPermssionCode("wrp", "exwarp.warp.use");
+        this.addPerm = plugin.createPermssionCode("wrp", "exwarp.warp.add");
+        this.removePerm = plugin.createPermssionCode("wrp", "exwarp.warp.remove");
+        this.warpNotExists = plugin.createHelpCode("wrp", "Warp not exists");
     }
 }
