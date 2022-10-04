@@ -9,6 +9,8 @@ import de.timesnake.basic.bukkit.util.user.User;
 import de.timesnake.basic.bukkit.util.world.ExWorld;
 import de.timesnake.extension.warp.server.ExWarpServer;
 import de.timesnake.library.basic.util.chat.ExTextColor;
+import de.timesnake.library.extension.util.chat.Code;
+import de.timesnake.library.extension.util.chat.Plugin;
 import de.timesnake.library.extension.util.cmd.Arguments;
 import de.timesnake.library.extension.util.cmd.ExCommand;
 import net.kyori.adventure.text.Component;
@@ -16,6 +18,9 @@ import net.kyori.adventure.text.Component;
 import java.util.List;
 
 public class HomeCmd implements CommandListener {
+
+    private Code.Permission perm;
+    private Code.Permission setPerm;
 
     @Override
     public void onCommand(Sender sender, ExCommand<Sender, Argument> cmd, Arguments<Argument> args) {
@@ -32,7 +37,7 @@ public class HomeCmd implements CommandListener {
 
         User user = sender.getUser();
         if (cmd.getName().equalsIgnoreCase("home")) {
-            if (!sender.hasPermission("exwarp.home", 2654)) {
+            if (!sender.hasPermission(this.perm)) {
                 return;
             }
 
@@ -62,7 +67,7 @@ public class HomeCmd implements CommandListener {
             }
 
         } else if (cmd.getName().equalsIgnoreCase("sethome")) {
-            if (!sender.hasPermission("exwarp.sethome", 2655)) {
+            if (!sender.hasPermission(this.setPerm)) {
                 return;
             }
 
@@ -88,5 +93,11 @@ public class HomeCmd implements CommandListener {
             return Server.getCommandManager().getTabCompleter().getWorldNames();
         }
         return null;
+    }
+
+    @Override
+    public void loadCodes(Plugin plugin) {
+        this.perm = plugin.createPermssionCode("hom", "exwarp.home");
+        this.setPerm = plugin.createPermssionCode("hom", "exwarp.sethome");
     }
 }
