@@ -12,7 +12,7 @@ import de.timesnake.basic.bukkit.util.chat.Sender;
 import de.timesnake.basic.bukkit.util.user.User;
 import de.timesnake.basic.bukkit.util.world.ExWorld;
 import de.timesnake.extension.warp.server.ExWarpServer;
-import de.timesnake.library.basic.util.chat.ExTextColor;
+import de.timesnake.library.chat.ExTextColor;
 import de.timesnake.library.extension.util.chat.Code;
 import de.timesnake.library.extension.util.chat.Plugin;
 import de.timesnake.library.extension.util.cmd.Arguments;
@@ -53,7 +53,7 @@ public class HomeCmd implements CommandListener {
                     sender.sendPluginMessage(
                             Component.text("You have no home set in world ", ExTextColor.WARNING)
                                     .append(Component.text(world.getName(), ExTextColor.VALUE)));
-                    sender.sendMessageCommandHelp("Set home", "sethome");
+                    sender.sendTDMessageCommandHelp("Set home", "sethome");
                     return;
                 }
 
@@ -66,7 +66,7 @@ public class HomeCmd implements CommandListener {
                 if (!hm.containsHome(user.getUniqueId(), null)) {
                     sender.sendPluginMessage(
                             Component.text("You have no home set", ExTextColor.WARNING));
-                    sender.sendMessageCommandHelp("Set home", "sethome");
+                    sender.sendTDMessageCommandHelp("Set home", "sethome");
                     return;
                 }
 
@@ -92,8 +92,8 @@ public class HomeCmd implements CommandListener {
             }
 
         } else {
-            sender.sendMessageCommandHelp("Teleport to home", "home");
-            sender.sendMessageCommandHelp("Set home", "sethome");
+            sender.sendTDMessageCommandHelp("Teleport to home", "home");
+            sender.sendTDMessageCommandHelp("Set home", "sethome");
         }
     }
 
