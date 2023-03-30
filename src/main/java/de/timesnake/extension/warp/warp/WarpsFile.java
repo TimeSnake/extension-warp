@@ -4,15 +4,13 @@
 
 package de.timesnake.extension.warp.warp;
 
-import de.timesnake.basic.bukkit.util.Server;
 import de.timesnake.basic.bukkit.util.exception.WorldNotExistException;
 import de.timesnake.basic.bukkit.util.file.ExFile;
-import de.timesnake.extension.warp.Plugin;
-import org.bukkit.Location;
-
+import de.timesnake.library.basic.util.Loggers;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
+import org.bukkit.Location;
 
 public class WarpsFile extends ExFile {
 
@@ -59,7 +57,7 @@ public class WarpsFile extends ExFile {
                     Warp warp = this.getWarp(name);
                     if (warp != null && warp.getLocation() != null) {
                         warps.add(warp);
-                        Server.printText(Plugin.WARP, "Loaded warp " + warp.getName());
+                        Loggers.WARPS.info("Loaded warp " + warp.getName());
                     }
                 }
             }

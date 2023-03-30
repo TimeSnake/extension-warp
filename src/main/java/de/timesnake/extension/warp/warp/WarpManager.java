@@ -4,9 +4,7 @@
 
 package de.timesnake.extension.warp.warp;
 
-import de.timesnake.basic.bukkit.util.Server;
-import de.timesnake.extension.warp.Plugin;
-
+import de.timesnake.library.basic.util.Loggers;
 import java.util.Collection;
 
 public class WarpManager {
@@ -18,10 +16,10 @@ public class WarpManager {
 
     public WarpManager() {
         this.areWarpsEnabled = this.file.areWarpsEnabled();
-        Server.printText(Plugin.WARP, "Warps enabled");
+        Loggers.WARPS.info("Warps enabled");
 
         this.warps = this.file.getWarps();
-        Server.printText(Plugin.WARP, "Loaded warps from file");
+        Loggers.WARPS.info("Loaded warps from file");
     }
 
     public void saveWarpsToFile() {
@@ -35,7 +33,7 @@ public class WarpManager {
                 this.file.addWarp(warp.getName(), warp.getLocation());
             }
         }
-        Server.printText(Plugin.WARP, "Saved warps to file");
+        Loggers.WARPS.info("Saved warps to file");
     }
 
     public Collection<Warp> getWarps() {
