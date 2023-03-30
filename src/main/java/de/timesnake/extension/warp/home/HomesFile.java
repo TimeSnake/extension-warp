@@ -4,16 +4,14 @@
 
 package de.timesnake.extension.warp.home;
 
-import de.timesnake.basic.bukkit.util.Server;
 import de.timesnake.basic.bukkit.util.exception.WorldNotExistException;
 import de.timesnake.basic.bukkit.util.file.ExFile;
-import de.timesnake.extension.warp.Plugin;
-import org.bukkit.Location;
-
+import de.timesnake.library.basic.util.Loggers;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
+import org.bukkit.Location;
 
 public class HomesFile extends ExFile {
 
@@ -28,12 +26,15 @@ public class HomesFile extends ExFile {
     }
 
     public void addHome(Home home) {
-        super.setLocation(HOMES + "." + home.getUuid().toString() + "." + home.getLocation().getWorld().getName(),
+        super.setLocation(
+                HOMES + "." + home.getUuid().toString() + "." + home.getLocation().getWorld()
+                        .getName(),
                 home.getLocation(), true);
     }
 
     public void removeHome(Home home) {
-        super.remove(HOMES + "." + home.getUuid().toString() + "." + home.getLocation().getWorld().getName());
+        super.remove(HOMES + "." + home.getUuid().toString() + "." + home.getLocation().getWorld()
+                .getName());
     }
 
     public Home getHome(UUID uuid, String worldName) {
@@ -43,8 +44,9 @@ public class HomesFile extends ExFile {
             try {
                 location = super.getLocation(path);
             } catch (WorldNotExistException e) {
-                Server.printWarning(Plugin.HOME,
-                        "Can not get location (world not exist) from uuid: " + uuid.toString() + " world: " + worldName);
+                Loggers.WARPS.warning(
+                        "Can not get location (world not exist) from uuid: " + uuid.toString()
+                                + " world: " + worldName);
                 return null;
             }
             if (location != null) {
@@ -63,7 +65,7 @@ public class HomesFile extends ExFile {
                 try {
                     uuid = UUID.fromString(uuidString);
                 } catch (IllegalArgumentException e) {
-                    Server.printWarning(Plugin.HOME, "Can not get uuid from string: " + uuidString);
+                    Loggers.WARPS.warning("Can not get uuid from string: " + uuidString);
                     continue;
                 }
 
