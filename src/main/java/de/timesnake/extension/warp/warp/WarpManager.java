@@ -9,68 +9,68 @@ import java.util.Collection;
 
 public class WarpManager {
 
-    private final WarpsFile file = new WarpsFile();
-    private Collection<Warp> warps;
+  private final WarpsFile file = new WarpsFile();
+  private Collection<Warp> warps;
 
-    private boolean areWarpsEnabled;
+  private boolean areWarpsEnabled;
 
-    public WarpManager() {
-        this.areWarpsEnabled = this.file.areWarpsEnabled();
-        Loggers.WARPS.info("Warps enabled");
+  public WarpManager() {
+    this.areWarpsEnabled = this.file.areWarpsEnabled();
+    Loggers.WARPS.info("Warps enabled");
 
-        this.warps = this.file.getWarps();
-        Loggers.WARPS.info("Loaded warps from file");
+    this.warps = this.file.getWarps();
+    Loggers.WARPS.info("Loaded warps from file");
+  }
+
+  public void saveWarpsToFile() {
+    this.file.resetWarps();
+    for (Warp warp : this.warps) {
+      if (warp.getAliases().size() > 0) {
+        Collection<String> aliases = warp.getAliases();
+        String[] stringArray = new String[aliases.size()];
+        this.file.addWarp(warp.getName(), warp.getLocation(), aliases.toArray(stringArray));
+      } else {
+        this.file.addWarp(warp.getName(), warp.getLocation());
+      }
     }
+    Loggers.WARPS.info("Saved warps to file");
+  }
 
-    public void saveWarpsToFile() {
-        this.file.resetWarps();
-        for (Warp warp : this.warps) {
-            if (warp.getAliases().size() > 0) {
-                Collection<String> aliases = warp.getAliases();
-                String[] stringArray = new String[aliases.size()];
-                this.file.addWarp(warp.getName(), warp.getLocation(), aliases.toArray(stringArray));
-            } else {
-                this.file.addWarp(warp.getName(), warp.getLocation());
-            }
-        }
-        Loggers.WARPS.info("Saved warps to file");
-    }
+  public Collection<Warp> getWarps() {
+    return warps;
+  }
 
-    public Collection<Warp> getWarps() {
-        return warps;
-    }
+  public boolean containsWarp(String warpName) {
+    return this.getWarp(warpName) != null;
+  }
 
-    public boolean containsWarp(String warpName) {
-        return this.getWarp(warpName) != null;
+  public Warp getWarp(String warpName) {
+    for (Warp warp : this.warps) {
+      if (warp.getName().equals(warpName)) {
+        return warp;
+      } else if (warp.getAliases().contains(warpName)) {
+        return warp;
+      }
     }
+    return null;
+  }
 
-    public Warp getWarp(String warpName) {
-        for (Warp warp : this.warps) {
-            if (warp.getName().equals(warpName)) {
-                return warp;
-            } else if (warp.getAliases().contains(warpName)) {
-                return warp;
-            }
-        }
-        return null;
-    }
+  public void addWarp(Warp warp) {
+    this.warps.add(warp);
+  }
 
-    public void addWarp(Warp warp) {
-        this.warps.add(warp);
-    }
+  public void removeWarp(Warp warp) {
+    this.warps.remove(warp);
+  }
 
-    public void removeWarp(Warp warp) {
-        this.warps.remove(warp);
+  public void removeWarp(String warpName) {
+    Warp warp = this.getWarp(warpName);
+    if (warp != null) {
+      this.removeWarp(warp);
     }
+  }
 
-    public void removeWarp(String warpName) {
-        Warp warp = this.getWarp(warpName);
-        if (warp != null) {
-            this.removeWarp(warp);
-        }
-    }
-
-    public boolean areWarpsEnabled() {
-        return areWarpsEnabled;
-    }
+  public boolean areWarpsEnabled() {
+    return areWarpsEnabled;
+  }
 }
