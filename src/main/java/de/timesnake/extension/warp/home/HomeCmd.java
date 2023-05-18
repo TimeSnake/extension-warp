@@ -22,93 +22,93 @@ import net.kyori.adventure.text.Component;
 
 public class HomeCmd implements CommandListener {
 
-    private Code perm;
-    private Code setPerm;
+  private Code perm;
+  private Code setPerm;
 
-    @Override
-    public void onCommand(Sender sender, ExCommand<Sender, Argument> cmd,
-            Arguments<Argument> args) {
-        HomeManager hm = ExWarpServer.getHomeManager();
+  @Override
+  public void onCommand(Sender sender, ExCommand<Sender, Argument> cmd,
+      Arguments<Argument> args) {
+    HomeManager hm = ExWarpServer.getHomeManager();
 
-        if (!sender.isPlayer(true)) {
-            return;
-        }
-
-        if (!ExWarpServer.getHomeManager().areHomesEnabled()) {
-            sender.sendPluginMessage(
-                    Component.text("Homes are not enabled on this server", ExTextColor.WARNING));
-            return;
-        }
-
-        User user = sender.getUser();
-        if (cmd.getName().equalsIgnoreCase("home")) {
-            if (!sender.hasPermission(this.perm)) {
-                return;
-            }
-
-            if (hm.areWorldHomesEnabled()) {
-                ExWorld world = user.getExWorld();
-
-                if (!hm.containsHome(user.getUniqueId(), world.getBukkitWorld())) {
-                    sender.sendPluginMessage(
-                            Component.text("You have no home set in world ", ExTextColor.WARNING)
-                                    .append(Component.text(world.getName(), ExTextColor.VALUE)));
-                    sender.sendTDMessageCommandHelp("Set home", "sethome");
-                    return;
-                }
-
-                user.teleport(hm.getHome(user.getUniqueId(), world.getBukkitWorld()).getLocation());
-                sender.sendPluginMessage(
-                        Component.text("Teleported to home in world ", ExTextColor.PERSONAL)
-                                .append(Component.text(world.getName(), ExTextColor.VALUE)));
-
-            } else {
-                if (!hm.containsHome(user.getUniqueId(), null)) {
-                    sender.sendPluginMessage(
-                            Component.text("You have no home set", ExTextColor.WARNING));
-                    sender.sendTDMessageCommandHelp("Set home", "sethome");
-                    return;
-                }
-
-                user.teleport(hm.getHome(user.getUniqueId(), null).getLocation());
-                sender.sendPluginMessage(
-                        Component.text("Teleported to home", ExTextColor.PERSONAL));
-            }
-
-        } else if (cmd.getName().equalsIgnoreCase("sethome")) {
-            if (!sender.hasPermission(this.setPerm)) {
-                return;
-            }
-
-            ExWorld world = user.getExWorld();
-            hm.setHome(user.getUniqueId(), world.getBukkitWorld(), user.getLocation());
-
-            if (hm.areWorldHomesEnabled()) {
-                sender.sendPluginMessage(
-                        Component.text("Home placed for world ", ExTextColor.PERSONAL)
-                                .append(Component.text(world.getName(), ExTextColor.VALUE)));
-            } else {
-                sender.sendPluginMessage(Component.text("Home placed", ExTextColor.PERSONAL));
-            }
-
-        } else {
-            sender.sendTDMessageCommandHelp("Teleport to home", "home");
-            sender.sendTDMessageCommandHelp("Set home", "sethome");
-        }
+    if (!sender.isPlayer(true)) {
+      return;
     }
 
-    @Override
-    public List<String> getTabCompletion(ExCommand<Sender, Argument> cmd,
-            Arguments<Argument> args) {
-        if (ExWarpServer.getHomeManager().areWorldHomesEnabled() && args.getLength() == 0) {
-            return Server.getCommandManager().getTabCompleter().getWorldNames();
-        }
-        return null;
+    if (!ExWarpServer.getHomeManager().areHomesEnabled()) {
+      sender.sendPluginMessage(
+          Component.text("Homes are not enabled on this server", ExTextColor.WARNING));
+      return;
     }
 
-    @Override
-    public void loadCodes(Plugin plugin) {
-        this.perm = plugin.createPermssionCode("exwarp.home");
-        this.setPerm = plugin.createPermssionCode("exwarp.sethome");
+    User user = sender.getUser();
+    if (cmd.getName().equalsIgnoreCase("home")) {
+      if (!sender.hasPermission(this.perm)) {
+        return;
+      }
+
+      if (hm.areWorldHomesEnabled()) {
+        ExWorld world = user.getExWorld();
+
+        if (!hm.containsHome(user.getUniqueId(), world.getBukkitWorld())) {
+          sender.sendPluginMessage(
+              Component.text("You have no home set in world ", ExTextColor.WARNING)
+                  .append(Component.text(world.getName(), ExTextColor.VALUE)));
+          sender.sendTDMessageCommandHelp("Set home", "sethome");
+          return;
+        }
+
+        user.teleport(hm.getHome(user.getUniqueId(), world.getBukkitWorld()).getLocation());
+        sender.sendPluginMessage(
+            Component.text("Teleported to home in world ", ExTextColor.PERSONAL)
+                .append(Component.text(world.getName(), ExTextColor.VALUE)));
+
+      } else {
+        if (!hm.containsHome(user.getUniqueId(), null)) {
+          sender.sendPluginMessage(
+              Component.text("You have no home set", ExTextColor.WARNING));
+          sender.sendTDMessageCommandHelp("Set home", "sethome");
+          return;
+        }
+
+        user.teleport(hm.getHome(user.getUniqueId(), null).getLocation());
+        sender.sendPluginMessage(
+            Component.text("Teleported to home", ExTextColor.PERSONAL));
+      }
+
+    } else if (cmd.getName().equalsIgnoreCase("sethome")) {
+      if (!sender.hasPermission(this.setPerm)) {
+        return;
+      }
+
+      ExWorld world = user.getExWorld();
+      hm.setHome(user.getUniqueId(), world.getBukkitWorld(), user.getLocation());
+
+      if (hm.areWorldHomesEnabled()) {
+        sender.sendPluginMessage(
+            Component.text("Home placed for world ", ExTextColor.PERSONAL)
+                .append(Component.text(world.getName(), ExTextColor.VALUE)));
+      } else {
+        sender.sendPluginMessage(Component.text("Home placed", ExTextColor.PERSONAL));
+      }
+
+    } else {
+      sender.sendTDMessageCommandHelp("Teleport to home", "home");
+      sender.sendTDMessageCommandHelp("Set home", "sethome");
     }
+  }
+
+  @Override
+  public List<String> getTabCompletion(ExCommand<Sender, Argument> cmd,
+      Arguments<Argument> args) {
+    if (ExWarpServer.getHomeManager().areWorldHomesEnabled() && args.getLength() == 0) {
+      return Server.getCommandManager().getTabCompleter().getWorldNames();
+    }
+    return null;
+  }
+
+  @Override
+  public void loadCodes(Plugin plugin) {
+    this.perm = plugin.createPermssionCode("exwarp.home");
+    this.setPerm = plugin.createPermssionCode("exwarp.sethome");
+  }
 }
