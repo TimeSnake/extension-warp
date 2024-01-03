@@ -5,29 +5,27 @@
 package de.timesnake.extension.warp.home;
 
 
-import de.timesnake.basic.bukkit.util.Server;
-import de.timesnake.basic.bukkit.util.chat.Argument;
-import de.timesnake.basic.bukkit.util.chat.CommandListener;
-import de.timesnake.basic.bukkit.util.chat.Sender;
+import de.timesnake.basic.bukkit.util.chat.cmd.Argument;
+import de.timesnake.basic.bukkit.util.chat.cmd.CommandListener;
+import de.timesnake.basic.bukkit.util.chat.cmd.Completion;
+import de.timesnake.basic.bukkit.util.chat.cmd.Sender;
 import de.timesnake.basic.bukkit.util.user.User;
 import de.timesnake.basic.bukkit.util.world.ExWorld;
+import de.timesnake.extension.warp.Plugin;
 import de.timesnake.extension.warp.server.ExWarpServer;
 import de.timesnake.library.chat.ExTextColor;
+import de.timesnake.library.commands.PluginCommand;
+import de.timesnake.library.commands.simple.Arguments;
 import de.timesnake.library.extension.util.chat.Code;
-import de.timesnake.library.extension.util.chat.Plugin;
-import de.timesnake.library.extension.util.cmd.Arguments;
-import de.timesnake.library.extension.util.cmd.ExCommand;
-import java.util.List;
 import net.kyori.adventure.text.Component;
 
 public class HomeCmd implements CommandListener {
 
-  private Code perm;
-  private Code setPerm;
+  private final Code perm = Plugin.WARP.createPermssionCode("exwarp.home");
+  private final Code setPerm = Plugin.WARP.createPermssionCode("exwarp.sethome");
 
   @Override
-  public void onCommand(Sender sender, ExCommand<Sender, Argument> cmd,
-      Arguments<Argument> args) {
+  public void onCommand(Sender sender, PluginCommand cmd, Arguments<Argument> args) {
     HomeManager hm = ExWarpServer.getHomeManager();
 
     if (!sender.isPlayer(true)) {
@@ -98,17 +96,13 @@ public class HomeCmd implements CommandListener {
   }
 
   @Override
-  public List<String> getTabCompletion(ExCommand<Sender, Argument> cmd,
-      Arguments<Argument> args) {
-    if (ExWarpServer.getHomeManager().areWorldHomesEnabled() && args.getLength() == 0) {
-      return Server.getCommandManager().getTabCompleter().getWorldNames();
-    }
-    return null;
+  public Completion getTabCompletion() {
+    return new Completion(this.perm)
+        .addArgument(() -> ExWarpServer.getHomeManager().areWorldHomesEnabled() ? Completion.ofWorldNames() : Completion.empty());
   }
 
   @Override
-  public void loadCodes(Plugin plugin) {
-    this.perm = plugin.createPermssionCode("exwarp.home");
-    this.setPerm = plugin.createPermssionCode("exwarp.sethome");
+  public String getPermission() {
+    return this.perm.getPermission();
   }
 }
