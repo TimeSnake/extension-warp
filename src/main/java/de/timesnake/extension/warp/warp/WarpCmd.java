@@ -4,33 +4,33 @@
 
 package de.timesnake.extension.warp.warp;
 
-import de.timesnake.basic.bukkit.util.chat.Argument;
-import de.timesnake.basic.bukkit.util.chat.CommandListener;
-import de.timesnake.basic.bukkit.util.chat.Sender;
+import de.timesnake.basic.bukkit.util.chat.cmd.Argument;
+import de.timesnake.basic.bukkit.util.chat.cmd.CommandListener;
+import de.timesnake.basic.bukkit.util.chat.cmd.Completion;
+import de.timesnake.basic.bukkit.util.chat.cmd.Sender;
 import de.timesnake.basic.bukkit.util.user.User;
+import de.timesnake.extension.warp.Plugin;
 import de.timesnake.extension.warp.server.ExWarpServer;
 import de.timesnake.library.chat.ExTextColor;
+import de.timesnake.library.commands.PluginCommand;
+import de.timesnake.library.commands.simple.Arguments;
 import de.timesnake.library.extension.util.chat.Chat;
 import de.timesnake.library.extension.util.chat.Code;
-import de.timesnake.library.extension.util.chat.Plugin;
-import de.timesnake.library.extension.util.cmd.Arguments;
-import de.timesnake.library.extension.util.cmd.ExCommand;
-import java.util.ArrayList;
-import java.util.List;
 import net.kyori.adventure.text.Component;
+
+import java.util.List;
 
 public class WarpCmd implements CommandListener {
 
-  private Code createPerm;
-  private Code usePerm;
-  private Code removePerm;
-  private Code addPerm;
-  private Code warpNotExists;
+  private final Code createPerm = Plugin.WARP.createPermssionCode("exwarp.warp.create");
+  private final Code usePerm = Plugin.WARP.createPermssionCode("exwarp.warp.use");
+  private final Code removePerm = Plugin.WARP.createPermssionCode("exwarp.warp.add");
+  private final Code addPerm = Plugin.WARP.createPermssionCode("exwarp.warp.remove");
+  private final Code warpNotExists = Plugin.WARP.createHelpCode("Warp not exists");
 
 
   @Override
-  public void onCommand(Sender sender, ExCommand<Sender, Argument> cmd,
-      Arguments<Argument> args) {
+  public void onCommand(Sender sender, PluginCommand cmd, Arguments<Argument> args) {
     WarpManager wm = ExWarpServer.getWarpManager();
 
     if (!wm.areWarpsEnabled()) {
@@ -52,7 +52,7 @@ public class WarpCmd implements CommandListener {
           && sender.hasPermission(this.createPerm)) {
         List<String> aliases = args.toStringList(2, args.getLength() - 1);
         wm.addWarp(new Warp(warpName, user.getLocation(), aliases));
-        if (aliases == null || aliases.size() == 0) {
+        if (aliases == null || aliases.isEmpty()) {
           sender.sendPluginMessage(Component.text("Created warp ", ExTextColor.PERSONAL)
               .append(Component.text(warpName, ExTextColor.VALUE)));
         } else {
@@ -139,25 +139,14 @@ public class WarpCmd implements CommandListener {
   }
 
   @Override
-  public List<String> getTabCompletion(ExCommand<Sender, Argument> cmd,
-      Arguments<Argument> args) {
-    if (args.getLength() == 1) {
-      List<String> warps = new ArrayList<>();
-      warps.add("create");
-      for (Warp warp : ExWarpServer.getWarpManager().getWarps()) {
-        warps.add(warp.getName());
-      }
-      return warps;
-    }
-    return null;
+  public Completion getTabCompletion() {
+    return new Completion(this.usePerm)
+        .addArgument(new Completion(ExWarpServer.getWarpManager().getWarps().stream().map(Warp::getName).toList())
+            .addArgument(new Completion(this.createPerm, "create")));
   }
 
   @Override
-  public void loadCodes(Plugin plugin) {
-    this.createPerm = plugin.createPermssionCode("exwarp.warp.create");
-    this.usePerm = plugin.createPermssionCode("exwarp.warp.use");
-    this.addPerm = plugin.createPermssionCode("exwarp.warp.add");
-    this.removePerm = plugin.createPermssionCode("exwarp.warp.remove");
-    this.warpNotExists = plugin.createHelpCode("Warp not exists");
+  public String getPermission() {
+    return this.usePerm.getPermission();
   }
 }
