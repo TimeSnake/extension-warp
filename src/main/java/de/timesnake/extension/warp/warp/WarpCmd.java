@@ -11,11 +11,11 @@ import de.timesnake.basic.bukkit.util.chat.cmd.Sender;
 import de.timesnake.basic.bukkit.util.user.User;
 import de.timesnake.extension.warp.Plugin;
 import de.timesnake.extension.warp.server.ExWarpServer;
+import de.timesnake.library.chat.Chat;
+import de.timesnake.library.chat.Code;
 import de.timesnake.library.chat.ExTextColor;
 import de.timesnake.library.commands.PluginCommand;
 import de.timesnake.library.commands.simple.Arguments;
-import de.timesnake.library.extension.util.chat.Chat;
-import de.timesnake.library.extension.util.chat.Code;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
