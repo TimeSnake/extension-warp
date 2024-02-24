@@ -6,18 +6,22 @@ package de.timesnake.extension.warp.home;
 
 import de.timesnake.basic.bukkit.util.exception.WorldNotExistException;
 import de.timesnake.basic.bukkit.util.file.ExFile;
-import de.timesnake.library.basic.util.Loggers;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bukkit.Location;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
-import org.bukkit.Location;
 
 public class HomesFile extends ExFile {
 
   public static final String HOMES = "homes";
   public static final String HOMES_ENABLED = "homes_enabled";
   public static final String WORLD_HOMES_ENABLED = "world_homes_enabled";
+
+  private final Logger logger = LogManager.getLogger("home.file");
 
   public HomesFile() {
     super("exwarp", "homes");
@@ -44,9 +48,7 @@ public class HomesFile extends ExFile {
       try {
         location = super.getLocation(path);
       } catch (WorldNotExistException e) {
-        Loggers.WARPS.warning(
-            "Can not get location (world not exist) from uuid: " + uuid.toString()
-                + " world: " + worldName);
+        this.logger.warn("Can not get location (world not exist) from uuid: '{}' world: {}", uuid, worldName);
         return null;
       }
       if (location != null) {
@@ -65,7 +67,7 @@ public class HomesFile extends ExFile {
         try {
           uuid = UUID.fromString(uuidString);
         } catch (IllegalArgumentException e) {
-          Loggers.WARPS.warning("Can not get uuid from string: " + uuidString);
+          this.logger.warn("Can not get uuid from string: {}", uuidString);
           continue;
         }
 

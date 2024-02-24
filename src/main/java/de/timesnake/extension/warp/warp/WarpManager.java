@@ -4,28 +4,32 @@
 
 package de.timesnake.extension.warp.warp;
 
-import de.timesnake.library.basic.util.Loggers;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Collection;
 
 public class WarpManager {
 
-  private final WarpsFile file = new WarpsFile();
-  private Collection<Warp> warps;
+  private final Logger logger = LogManager.getLogger("warp.manager");
 
-  private boolean areWarpsEnabled;
+  private final WarpsFile file = new WarpsFile();
+  private final Collection<Warp> warps;
+
+  private final boolean areWarpsEnabled;
 
   public WarpManager() {
     this.areWarpsEnabled = this.file.areWarpsEnabled();
-    Loggers.WARPS.info("Warps enabled");
+    this.logger.info("Warps enabled");
 
     this.warps = this.file.getWarps();
-    Loggers.WARPS.info("Loaded warps from file");
+    this.logger.info("Loaded warps from file");
   }
 
   public void saveWarpsToFile() {
     this.file.resetWarps();
     for (Warp warp : this.warps) {
-      if (warp.getAliases().size() > 0) {
+      if (!warp.getAliases().isEmpty()) {
         Collection<String> aliases = warp.getAliases();
         String[] stringArray = new String[aliases.size()];
         this.file.addWarp(warp.getName(), warp.getLocation(), aliases.toArray(stringArray));
@@ -33,7 +37,7 @@ public class WarpManager {
         this.file.addWarp(warp.getName(), warp.getLocation());
       }
     }
-    Loggers.WARPS.info("Saved warps to file");
+    this.logger.info("Saved warps to file");
   }
 
   public Collection<Warp> getWarps() {
