@@ -6,17 +6,16 @@ package de.timesnake.extension.warp.home;
 
 import de.timesnake.basic.bukkit.util.Server;
 import de.timesnake.basic.bukkit.util.world.ExWorld;
-import de.timesnake.library.basic.util.Loggers;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import java.util.*;
+
 public class HomeManager {
+
+  private final Logger logger = LogManager.getLogger("home.manager");
 
   private final Map<List<Object>, Home> homes = new HashMap<>();
 
@@ -29,12 +28,12 @@ public class HomeManager {
   public HomeManager() {
     this.areHomesEnabled = this.file.areHomesEnabled();
     if (this.areHomesEnabled) {
-      Loggers.WARPS.info("Homes are enabled");
+      this.logger.info("Homes are enabled");
     }
 
     this.areWorldHomesEnabled = this.file.areWorldHomesEnabled();
     if (this.areWorldHomesEnabled) {
-      Loggers.WARPS.info("Homes per world are enabled");
+      this.logger.info("Homes per world are enabled");
     }
 
     for (Home home : this.file.getHomes()) {
@@ -48,11 +47,9 @@ public class HomeManager {
       }
 
       this.homes.put(key, home);
-      Loggers.WARPS.info(
-          "Loaded home " + home.getUuid() + " world: " + home.getLocation().getWorld()
-              .getName());
+      this.logger.info("Loaded home '{}' world: {}", home.getUuid(), home.getLocation().getWorld().getName());
     }
-    Loggers.WARPS.info("Loaded homes from file");
+    this.logger.info("Loaded homes from file");
   }
 
   public List<Object> getKeyList(UUID uuid, World world) {
@@ -70,7 +67,7 @@ public class HomeManager {
       this.file.addHome(home);
     }
     this.file.save();
-    Loggers.WARPS.info("Saved homes to file");
+    this.logger.info("Saved homes to file");
   }
 
   public Home getHome(UUID uuid, World world) {

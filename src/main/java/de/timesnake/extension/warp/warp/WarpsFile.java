@@ -6,11 +6,13 @@ package de.timesnake.extension.warp.warp;
 
 import de.timesnake.basic.bukkit.util.exception.WorldNotExistException;
 import de.timesnake.basic.bukkit.util.file.ExFile;
-import de.timesnake.library.basic.util.Loggers;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bukkit.Location;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
-import org.bukkit.Location;
 
 public class WarpsFile extends ExFile {
 
@@ -18,6 +20,8 @@ public class WarpsFile extends ExFile {
 
   public static final String WARPS = "warps";
   public static final String ALIASES = "aliases";
+
+  private final Logger logger = LogManager.getLogger("warp.file");
 
   public WarpsFile() {
     super("exwarp", "warps");
@@ -57,7 +61,7 @@ public class WarpsFile extends ExFile {
           Warp warp = this.getWarp(name);
           if (warp != null && warp.getLocation() != null) {
             warps.add(warp);
-            Loggers.WARPS.info("Loaded warp " + warp.getName());
+            this.logger.info("Loaded warp '{}'", warp.getName());
           }
         }
       }
