@@ -11,12 +11,9 @@ import de.timesnake.basic.bukkit.util.chat.cmd.Sender;
 import de.timesnake.basic.bukkit.util.user.User;
 import de.timesnake.extension.warp.Plugin;
 import de.timesnake.extension.warp.server.ExWarpServer;
-import de.timesnake.library.chat.Chat;
 import de.timesnake.library.chat.Code;
-import de.timesnake.library.chat.ExTextColor;
 import de.timesnake.library.commands.PluginCommand;
 import de.timesnake.library.commands.simple.Arguments;
-import net.kyori.adventure.text.Component;
 
 import java.util.List;
 
@@ -34,16 +31,12 @@ public class WarpCmd implements CommandListener {
     WarpManager wm = ExWarpServer.getWarpManager();
 
     if (!wm.areWarpsEnabled()) {
-      sender.sendPluginMessage(Component.text("Warps are disabled", ExTextColor.WARNING));
+      sender.sendPluginTDMessage("§wWarps are disabled");
       return;
     }
 
-    if (!args.isLengthHigherEquals(1, true)) {
-      return;
-    }
-    if (!sender.isPlayer(true)) {
-      return;
-    }
+    args.isLengthHigherEqualsElseExit(1, true);
+    sender.isPlayerElseExit(true);
     User user = sender.getUser();
 
     String warpName = args.get(0).toLowerCase();
@@ -53,87 +46,54 @@ public class WarpCmd implements CommandListener {
         List<String> aliases = args.toStringList(2, args.getLength() - 1);
         wm.addWarp(new Warp(warpName, user.getLocation(), aliases));
         if (aliases == null || aliases.isEmpty()) {
-          sender.sendPluginMessage(Component.text("Created warp ", ExTextColor.PERSONAL)
-              .append(Component.text(warpName, ExTextColor.VALUE)));
+          sender.sendPluginTDMessage("§sCreated warp §v" + warpName);
         } else {
-          sender.sendPluginMessage(Component.text("Created warp ", ExTextColor.PERSONAL)
-              .append(Component.text(warpName, ExTextColor.VALUE))
-              .append(Component.text(" with aliases: ", ExTextColor.PERSONAL))
-              .append(Chat.listToComponent(aliases, ExTextColor.VALUE,
-                  ExTextColor.PERSONAL)));
+          sender.sendPluginTDMessage("§sCreated warp §v" + warpName + "§s with aliases: §v" +
+                                     String.join("§s, §v", aliases));
         }
       } else {
         sender.sendMessageNotExist(warpName, this.warpNotExists, "Warp");
-        sender.sendMessageCommandHelp(Component.text("Create warp"),
-            Component.text("warp <name> create [{aliases}]"));
+        sender.sendTDMessageCommandHelp("Create warp", "warp <name> create [{aliases}]");
       }
     } else {
       Warp warp = wm.getWarp(warpName);
 
       if (args.isLengthEquals(1, false)) {
-        if (!sender.hasPermission(this.usePerm)) {
-          return;
-        }
+        sender.hasPermissionElseExit(this.usePerm);
         user.teleport(warp.getLocation());
-        sender.sendPluginMessage(Component.text("Teleported to warp ", ExTextColor.PERSONAL)
-            .append(Component.text(warpName, ExTextColor.VALUE)));
+        sender.sendPluginTDMessage("§sTeleported to warp §v" + warpName);
       } else if (args.isLengthEquals(3, false)) {
         if (args.get(2).toLowerCase().equals("alias") || args.isLengthEquals(4, true)) {
           String alias = args.getString(3).toLowerCase();
           if (args.get(1).toLowerCase().equals("add")) {
-            if (!sender.hasPermission(this.addPerm)) {
-              return;
-            }
+            sender.hasPermissionElseExit(this.addPerm);
+            
             if (wm.containsWarp(alias)) {
-              sender.sendPluginMessage(Component.text("Warp ", ExTextColor.WARNING)
-                  .append(Component.text(alias, ExTextColor.VALUE))
-                  .append(Component.text(" already exists",
-                      ExTextColor.WARNING)));
+              sender.sendPluginTDMessage("§wWarp §v" + alias + "§v already exists");
               return;
             }
             warp.addAlias(alias);
-            sender.sendPluginMessage(
-                Component.text("Added alias ", ExTextColor.PERSONAL)
-                    .append(Component.text(alias, ExTextColor.VALUE))
-                    .append(Component.text(" to warp ", ExTextColor.PERSONAL))
-                    .append(Component.text(warpName, ExTextColor.VALUE)));
+            sender.sendPluginTDMessage("§sAdded alias §v" + alias + "§s to warp §v" + warpName);
 
           } else if (args.get(1).toLowerCase().equals("remove")) {
-            if (!sender.hasPermission(this.removePerm)) {
-              return;
-            }
+            sender.hasPermissionElseExit(this.removePerm);
             if (!warp.getAliases().contains(alias)) {
-              sender.sendPluginMessage(
-                  Component.text("Warp alias ", ExTextColor.WARNING)
-                      .append(Component.text(warpName, ExTextColor.VALUE))
-                      .append(Component.text(" not exists",
-                          ExTextColor.WARNING)));
+              sender.sendPluginTDMessage("§wWarp alias §v" + warpName + "§w not exists");
               return;
             }
             warp.removeAlias(alias);
-            sender.sendPluginMessage(
-                Component.text("Removed alias ", ExTextColor.PERSONAL)
-                    .append(Component.text(alias, ExTextColor.VALUE))
-                    .append(Component.text("from warp ", ExTextColor.PERSONAL))
-                    .append(Component.text(warpName, ExTextColor.VALUE)));
+            sender.sendPluginTDMessage("§sRemoved alias §v" + alias + "§s from warp §v" + warpName);
 
           }
         } else {
-          sender.sendMessageCommandHelp(Component.text("Add alias"),
-              Component.text("warp <name> add alias <alias>"));
-          sender.sendMessageCommandHelp(Component.text("Remove alias"),
-              Component.text("warp <name> remove alias <alias>"));
+          sender.sendTDMessageCommandHelp("Add alias", "warp <name> add alias <alias>");
+          sender.sendTDMessageCommandHelp("Remove alias", "warp <name> remove alias <alias>");
         }
       } else {
-        sender.sendMessageCommandHelp(Component.text("Use the warp"),
-            Component.text("warp <name/alias>"));
-        sender.sendMessageCommandHelp(Component.text("Create warp"),
-            Component.text("warp <name> create [{aliases}]"));
-        sender.sendMessageCommandHelp(Component.text("Add alias"),
-            Component.text("warp <name> add alias <alias>"));
-        sender.sendMessageCommandHelp(Component.text("Remove alias"),
-            Component.text("warp <name> remove alias <alias>"));
-
+        sender.sendTDMessageCommandHelp("Use the warp", "warp <name/alias>");
+        sender.sendTDMessageCommandHelp("Create warp", "warp <name> create [{aliases}]");
+        sender.sendTDMessageCommandHelp("Add alias", "warp <name> add alias <alias>");
+        sender.sendTDMessageCommandHelp("Remove alias", "warp <name> remove alias <alias>");
       }
     }
   }
