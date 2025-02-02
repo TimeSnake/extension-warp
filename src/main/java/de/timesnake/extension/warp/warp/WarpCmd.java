@@ -9,9 +9,9 @@ import de.timesnake.basic.bukkit.util.chat.cmd.CommandListener;
 import de.timesnake.basic.bukkit.util.chat.cmd.Completion;
 import de.timesnake.basic.bukkit.util.chat.cmd.Sender;
 import de.timesnake.basic.bukkit.util.user.User;
-import de.timesnake.extension.warp.Plugin;
 import de.timesnake.extension.warp.server.ExWarpServer;
 import de.timesnake.library.chat.Code;
+import de.timesnake.library.chat.Plugin;
 import de.timesnake.library.commands.PluginCommand;
 import de.timesnake.library.commands.simple.Arguments;
 
@@ -19,11 +19,11 @@ import java.util.List;
 
 public class WarpCmd implements CommandListener {
 
-  private final Code createPerm = Plugin.WARP.createPermssionCode("exwarp.warp.create");
-  private final Code usePerm = Plugin.WARP.createPermssionCode("exwarp.warp.use");
-  private final Code removePerm = Plugin.WARP.createPermssionCode("exwarp.warp.add");
-  private final Code addPerm = Plugin.WARP.createPermssionCode("exwarp.warp.remove");
-  private final Code warpNotExists = Plugin.WARP.createHelpCode("Warp not exists");
+  private final Code createPerm = Plugin.SERVER.createPermssionCode("exwarp.warp.create");
+  private final Code usePerm = Plugin.SERVER.createPermssionCode("exwarp.warp.use");
+  private final Code removePerm = Plugin.SERVER.createPermssionCode("exwarp.warp.add");
+  private final Code addPerm = Plugin.SERVER.createPermssionCode("exwarp.warp.remove");
+  private final Code warpNotExists = Plugin.SERVER.createHelpCode("Warp not exists");
 
 
   @Override
