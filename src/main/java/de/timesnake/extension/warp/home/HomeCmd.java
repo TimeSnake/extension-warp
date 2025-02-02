@@ -11,18 +11,18 @@ import de.timesnake.basic.bukkit.util.chat.cmd.Completion;
 import de.timesnake.basic.bukkit.util.chat.cmd.Sender;
 import de.timesnake.basic.bukkit.util.user.User;
 import de.timesnake.basic.bukkit.util.world.ExWorld;
-import de.timesnake.extension.warp.Plugin;
 import de.timesnake.extension.warp.server.ExWarpServer;
 import de.timesnake.library.chat.Code;
 import de.timesnake.library.chat.ExTextColor;
+import de.timesnake.library.chat.Plugin;
 import de.timesnake.library.commands.PluginCommand;
 import de.timesnake.library.commands.simple.Arguments;
 import net.kyori.adventure.text.Component;
 
 public class HomeCmd implements CommandListener {
 
-  private final Code perm = Plugin.WARP.createPermssionCode("exwarp.home");
-  private final Code setPerm = Plugin.WARP.createPermssionCode("exwarp.sethome");
+  private final Code perm = Plugin.SERVER.createPermssionCode("exwarp.home");
+  private final Code setPerm = Plugin.SERVER.createPermssionCode("exwarp.sethome");
 
   @Override
   public void onCommand(Sender sender, PluginCommand cmd, Arguments<Argument> args) {
