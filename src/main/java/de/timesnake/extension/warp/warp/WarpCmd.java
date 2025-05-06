@@ -67,7 +67,7 @@ public class WarpCmd implements CommandListener {
           String alias = args.getString(3).toLowerCase();
           if (args.get(1).toLowerCase().equals("add")) {
             sender.hasPermissionElseExit(this.addPerm);
-            
+
             if (wm.containsWarp(alias)) {
               sender.sendPluginTDMessage("§wWarp §v" + alias + "§v already exists");
               return;
@@ -101,7 +101,8 @@ public class WarpCmd implements CommandListener {
   @Override
   public Completion getTabCompletion() {
     return new Completion(this.usePerm)
-        .addArgument(new Completion(ExWarpServer.getWarpManager().getWarps().stream().map(Warp::getName).toList())
+        .addArgument(new Completion(ExWarpServer.getWarpManager().getWarps().stream().map(Warp::getName).toList()))
+        .addArgument(new Completion("<name>").allowAny()
             .addArgument(new Completion(this.createPerm, "create")));
   }
 
